@@ -4,6 +4,8 @@ namespace CodeIngestor\Command;
 
 use CodeIngestor\ConfigHandler;
 use CodeIngestor\Exception\ValidationException;
+use CodeIngestor\FileScanner;
+use CodeIngestor\ScanConfiguration;
 use CodeIngestor\Validation\SourceValidator;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -31,14 +33,28 @@ class IngestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
+            // Load config and validate
             $configPath = $input->getOption('config');
-            $config = (new ConfigHandler())->loadConfig($configPath);
+            $configArray = (new ConfigHandler())->loadConfig($configPath);
+            $resolvedSource = (new SourceValidator())->validate($configArray['source']);
 
-            // Validate source directory
-            $validator = new SourceValidator();
-            $resolvedSource = $validator->validate($config['source']);
-            $output->writeln("<info>Validated source: {$resolvedSource}</info>");
-            // TODO: Next step (scan files)
+            // Create scan configuration
+            $scanConfig = new ScanConfiguration(
+                $resolvedSource,
+                $configArray['ignore_dirs'],
+                $configArray['ignore_files']
+            );
+
+            // Scan files
+            $fileScanner = new FileScanner($scanConfig);
+            $files = $fileScanner->scanFiles();
+            $output->writeln("Scanned ".count($files)." files.");
+
+            // Generate directory tree
+            $tree = $fileScanner->generateDirectoryTree();
+            $output->writeln("Directory tree:\n".$tree);
+
+            // TODO: Write to output file (next step)
             $output->writeln('Done!');
             return Command::SUCCESS;
         } catch (ValidationException $e) {
