@@ -1,13 +1,11 @@
 #!/usr/bin/env php
 <?php
+
+use CodeIngestor\Command\IngestCommand;
+use Symfony\Component\Console\Application;
+
 require __DIR__ . '/../vendor/autoload.php';
-use CodeIngestor\ConfigHandler;
 
-if ($argc < 2 || $argv[1] !== 'ingest') {
-    echo "Usage: codeingestor ingest\n";
-    exit(1);
-}
-
-$config = (new ConfigHandler())->loadConfig('codeingestor.yaml');
-echo "Config loaded!\n";
-print_r($config);
+$app = new Application('CodeIngestor', '1.0.0');
+$app->add(new IngestCommand());
+$app->run();
