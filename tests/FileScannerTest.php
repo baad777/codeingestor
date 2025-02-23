@@ -14,14 +14,19 @@ class FileScannerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->testDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'codeingestor_test_'.uniqid();
+        $this->testDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'codeingestor_test_' . uniqid();
         mkdir($this->testDir);
 
-        mkdir($this->testDir.'/src');
-        file_put_contents($this->testDir.'/src/file1.php', '');
-        mkdir($this->testDir.'/src/utils');
-        file_put_contents($this->testDir.'/src/utils/file2.php', '');
-        mkdir($this->testDir.'/src/vendor'); // Should be ignored
+        $srcDir = $this->testDir . '/src';
+        mkdir($srcDir);
+        file_put_contents($srcDir . '/file1.php', '');
+        $utilsDir = $srcDir . '/utils';
+        mkdir($utilsDir);
+        file_put_contents($utilsDir . '/file2.php', '');
+
+        // Should be ignored
+        $vendorDir = $this->testDir . '/src/vendor';
+        mkdir($vendorDir);
     }
 
     protected function tearDown(): void
