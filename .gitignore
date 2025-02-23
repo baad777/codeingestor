@@ -1,0 +1,15 @@
+/vendor/
+node_modules/
+
+.php-cs-fixer.cache
+.php-cs-fixer.php
+.phpunit.result.cache
+.phpunit.cache
+
+# PHPUnit
+/app/phpunit.xml
+/phpunit.xml
+/composer.phar
+
+.env
+

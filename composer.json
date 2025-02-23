@@ -1,0 +1,25 @@
+{
+  "name": "codeingestor/codeingestor",
+  "type": "library",
+  "description": "Parse PHP projects into structured text files for LLM ingestion.",
+  "license": "MIT",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Bancu Adrian",
+      "email": "adrian@bancu.ro"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "symfony/yaml": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "CodeIngestor\\": "src/"
+    }
+  },
+  "bin": [
+    "bin/codeingestor"
+  ]
+}
