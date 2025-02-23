@@ -1,0 +1,10 @@
+# Default configuration
+source: "./"             # Folder to scan
+output: "output.txt"     # Output file
+ignore_dirs:             # Directories to skip
+  - vendor
+  - node_modules
+  - .git
+ignore_files:            # Files to skip
+  - .env
+  - .gitignore

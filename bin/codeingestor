@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+use CodeIngestor\ConfigHandler;
+
+if ($argc < 2 || $argv[1] !== 'ingest') {
+    echo "Usage: codeingestor ingest\n";
+    exit(1);
+}
+
+$config = (new ConfigHandler())->loadConfig('codeingestor.yaml');
+echo "Config loaded!\n";
+print_r($config);
