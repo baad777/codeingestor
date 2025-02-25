@@ -3,6 +3,7 @@
 namespace CodeIngestor\Command;
 
 use CodeIngestor\ConfigHandler;
+use CodeIngestor\ContentExtractor;
 use CodeIngestor\Exception\ValidationException;
 use CodeIngestor\FileScanner;
 use CodeIngestor\ScanConfiguration;
@@ -48,14 +49,31 @@ class IngestCommand extends Command
             // Scan files
             $fileScanner = new FileScanner($scanConfig);
             $files = $fileScanner->scanFiles();
-            $output->writeln("Scanned ".count($files)." files.");
-
             // Generate directory tree
             $tree = $fileScanner->generateDirectoryTree();
-            $output->writeln("Directory tree:\n".$tree);
 
-            // TODO: Write to output file (next step)
-            $output->writeln('Done!');
+            // Prepare output content
+            $outputContent = "Directory Tree:\n{$tree}\n\n";
+            $outputContent .= "File Contents:\n";
+
+            $extractor = new ContentExtractor();
+            foreach ($files as $file) {
+                $absolutePath = $scanConfig->getSourcePath() . DIRECTORY_SEPARATOR . $file;
+                $outputContent .= "\n================================================\n";
+                $outputContent .= "File: {$file}\n";
+                $outputContent .= "================================================\n";
+                $outputContent .= $extractor->extract($absolutePath) . "\n";
+            }
+
+            // Write to output file
+            $outputPath = $configArray['output'];
+            if (!is_dir(dirname($outputPath))) {
+                mkdir(dirname($outputPath), 0755, true);
+            }
+            file_put_contents($outputPath, $outputContent);
+
+            $output->writeln("<info>Output written to: {$outputPath}</info>");
+
             return Command::SUCCESS;
         } catch (ValidationException $e) {
             $output->writeln("<error>Validation Error: {$e->getMessage()}</error>");
