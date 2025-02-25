@@ -24,7 +24,7 @@ class DirectoryTreeTest extends TestCase
         $config = new ScanConfiguration($this->testDir, [], []);
         $scanner = new FileScanner($config);
 
-        $expected = "src\n    SubDir\n";
+        $expected = "src\n    SubDir\n        file.txt\n";
         $this->assertEquals($expected, $scanner->generateDirectoryTree());
     }
 }

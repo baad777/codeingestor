@@ -59,4 +59,17 @@ class FileScannerTest extends TestCase
         $this->assertEmpty($scanner->scanFiles());
         rmdir($emptyDir);
     }
+
+    public function testTreeIncludesFilesAndDirectories()
+    {
+        // Add a file at the root of the test directory
+        file_put_contents($this->testDir . '/root_file.txt', '');
+
+        $config = new ScanConfiguration($this->testDir, [], []);
+        $scanner = new FileScanner($config);
+
+        $expected = "src\n    utils\n        file2.php\n    vendor\n    file1.php\nroot_file.txt\n";
+
+        $this->assertEquals($expected, $scanner->generateDirectoryTree());
+    }
 }

@@ -51,16 +51,41 @@ readonly class FileScanner implements FileScannerInterface
             return $tree;
         }
 
+        // Separate directories and files, ignoring "." and ".."
+        $dirs = [];
+        $files = [];
         foreach ($entries as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+            if (is_dir($path)) {
+                $dirs[] = $entry;
+            } else {
+                $files[] = $entry;
+            }
+        }
+
+        // Sort entries alphabetically for consistent output
+        sort($dirs);
+        sort($files);
+
+        // Process directories first
+        foreach ($dirs as $entry) {
             if ($this->shouldIgnore($entry, $dir)) {
                 continue;
             }
+            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+            $tree .= $prefix . $entry . "\n";
+            $tree .= $this->buildTree($path, $prefix . '    ');
+        }
 
-            $path = $dir.DIRECTORY_SEPARATOR.$entry;
-            if (is_dir($path)) {
-                $tree .= $prefix.$entry."\n";
-                $tree .= $this->buildTree($path, $prefix.'    ');
+        // Process files next
+        foreach ($files as $entry) {
+            if ($this->shouldIgnore($entry, $dir)) {
+                continue;
             }
+            $tree .= $prefix . $entry . "\n";
         }
 
         return $tree;
