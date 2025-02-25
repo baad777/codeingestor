@@ -2,3 +2,5 @@ source: "./"
 output: "llm_output.txt"
 ignore_dirs:
   - "vendor"
+ignore_files:
+  - "*.lock"

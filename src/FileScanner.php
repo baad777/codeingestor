@@ -118,7 +118,7 @@ readonly class FileScanner implements FileScannerInterface
 
         // Skip ignored files
         foreach ($ignoreFiles as $pattern) {
-            if (str_contains($entry, $pattern)) {
+            if (fnmatch($pattern, $entry)) {
                 return true;
             }
         }

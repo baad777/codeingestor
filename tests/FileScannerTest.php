@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 class FileScannerTest extends TestCase
 {
     use DirectoryDeleterTrait;
+
     private string $testDir;
 
     protected function setUp(): void
@@ -50,7 +51,7 @@ class FileScannerTest extends TestCase
 
     public function testHandlesEmptyDirectory()
     {
-        $emptyDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'empty_test_'.uniqid();
+        $emptyDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'empty_test_' . uniqid();
         mkdir($emptyDir);
 
         $config = new ScanConfiguration($emptyDir, [], []);
@@ -89,5 +90,25 @@ class FileScannerTest extends TestCase
         $this->assertNotContains('.hidden_file.txt', $files);
         $this->assertNotContains('.hidden_dir', $files);
         $this->assertNotContains('file_in_hidden_dir.txt', $files);
+    }
+
+    public function testIgnoresFilesWithPattern()
+    {
+        // Add a two log files to the test directory
+        file_put_contents($this->testDir . '/file1.log', '');
+        file_put_contents($this->testDir . '/src/file2.log', '');
+
+        $config = new ScanConfiguration(
+            $this->testDir,
+            [], // Empty ignore_dirs
+            ['*.log'] // Ignore files with .log extension
+        );
+        $scanner = new FileScanner($config);
+
+        $files = $scanner->scanFiles();
+
+        $this->assertNotContains('file1.log', $files);
+        $this->assertNotContains('src/file2.log', $files);
+
     }
 }
