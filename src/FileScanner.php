@@ -98,6 +98,16 @@ readonly class FileScanner implements FileScannerInterface
             return true;
         }
 
+        // Check for hidden files on Unix-like systems
+        if (str_starts_with($entry, '.') && PHP_OS_FAMILY !== 'Windows') {
+            return true;
+        }
+
+        // Check for hidden files on Windows
+        if (str_starts_with($entry, '~')) {
+            return true;
+        }
+
         $ignoreDirs = $this->config->getIgnoreDirs();
         $ignoreFiles = $this->config->getIgnoreFiles();
 

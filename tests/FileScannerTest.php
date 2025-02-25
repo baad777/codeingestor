@@ -72,4 +72,22 @@ class FileScannerTest extends TestCase
 
         $this->assertEquals($expected, $scanner->generateDirectoryTree());
     }
+
+    public function testExcludesHiddenFilesAndDirectories()
+    {
+        // Add a hidden file and directory to the test directory
+        file_put_contents($this->testDir . '/.hidden_file.txt', '');
+        mkdir($this->testDir . '/.hidden_dir');
+        // add a file in the hidden dir
+        file_put_contents($this->testDir . '/.hidden_dir/file_in_hidden_dir.txt', '');
+
+        $config = new ScanConfiguration($this->testDir, [], []);
+        $scanner = new FileScanner($config);
+
+        $files = $scanner->scanFiles();
+        // files must not include the hidden file and directory
+        $this->assertNotContains('.hidden_file.txt', $files);
+        $this->assertNotContains('.hidden_dir', $files);
+        $this->assertNotContains('file_in_hidden_dir.txt', $files);
+    }
 }
