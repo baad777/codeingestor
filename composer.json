@@ -21,7 +21,8 @@
   },
   "autoload": {
     "psr-4": {
-      "CodeIngestor\\": "src/"
+      "CodeIngestor\\": "src/",
+      "CodeIngestor\\Tests\\": "tests/"
     }
   },
   "bin": [
