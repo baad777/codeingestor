@@ -13,11 +13,12 @@ class ConfigHandler {
             'ignore_files' => ['.env', '.gitignore']
         ];
 
-        if (!file_exists($configPath)) {
-            throw new RuntimeException("Config file not found: {$configPath}");
+        $userConfig = [];
+
+        if (file_exists($configPath)) {
+            $userConfig = Yaml::parseFile($configPath);
         }
 
-        $userConfig = Yaml::parseFile($configPath);
         return array_merge($defaults, $userConfig);
     }
 }

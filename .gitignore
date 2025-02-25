@@ -1,6 +1,8 @@
 /vendor/
 node_modules/
 
+codeingestor.yaml
+
 .php-cs-fixer.cache
 .php-cs-fixer.php
 .phpunit.result.cache

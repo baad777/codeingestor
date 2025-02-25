@@ -25,7 +25,7 @@ class IngestCommand extends Command
             ->addOption(
                 'config',
                 'c',
-                InputOption::VALUE_REQUIRED,
+                InputOption::VALUE_OPTIONAL,
                 'Path to config file',
                 'codeingestor.yaml'
             );
@@ -35,7 +35,7 @@ class IngestCommand extends Command
     {
         try {
             // Load config and validate
-            $configPath = $input->getOption('config');
+            $configPath = $input->getOption('config') ?? "codeingestor.yaml";
             $configArray = (new ConfigHandler())->loadConfig($configPath);
             $resolvedSource = (new SourceValidator())->validate($configArray['source']);
 
