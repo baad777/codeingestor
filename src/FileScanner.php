@@ -135,6 +135,12 @@ readonly class FileScanner implements FileScannerInterface
             }
         }
 
+        // Skip output file from configuration
+        $outputFile = $this->config->getOption(ScanConfigurationOption::OUTPUT->value);
+        if ($outputFile === $dir . DIRECTORY_SEPARATOR . $entry) {
+            return true;
+        }
+
         return false;
     }
 }
