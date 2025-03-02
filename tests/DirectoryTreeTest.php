@@ -21,7 +21,9 @@ class DirectoryTreeTest extends TestCase
 
     public function testGeneratesCorrectTreeStructure()
     {
-        $config = new ScanConfiguration($this->testDir, [], []);
+        $config = new ScanConfiguration([
+            'sourcePath' => $this->testDir
+        ]);
         $scanner = new FileScanner($config);
 
         $expected = "src\n    SubDir\n        file.txt\n";

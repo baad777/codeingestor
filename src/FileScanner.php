@@ -11,13 +11,25 @@ readonly class FileScanner implements FileScannerInterface
     public function scanFiles(): array
     {
         $files = [];
-        $this->scanDirectory($this->config->getSourcePath(), $files);
+
+        $this
+            ->scanDirectory(
+                $this
+                    ->config
+                    ->getOption(ScanConfigurationOption::SOURCE_PATH->value),
+                $files
+            );
+
         return $files;
     }
 
     public function generateDirectoryTree(): string
     {
-        return $this->buildTree($this->config->getSourcePath());
+        return $this
+            ->buildTree(
+                $this
+                    ->config
+                    ->getOption(ScanConfigurationOption::SOURCE_PATH->value));
     }
 
     private function scanDirectory(string $dir, array &$files, string $relativePath = ''): void
@@ -32,8 +44,8 @@ readonly class FileScanner implements FileScannerInterface
                 continue;
             }
 
-            $path = $dir.DIRECTORY_SEPARATOR.$entry;
-            $newRelativePath = $relativePath !== '' ? $relativePath.DIRECTORY_SEPARATOR.$entry : $entry;
+            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+            $newRelativePath = $relativePath !== '' ? $relativePath . DIRECTORY_SEPARATOR . $entry : $entry;
 
             if (is_dir($path)) {
                 $this->scanDirectory($path, $files, $newRelativePath);
@@ -108,11 +120,11 @@ readonly class FileScanner implements FileScannerInterface
             return true;
         }
 
-        $ignoreDirs = $this->config->getIgnoreDirs();
-        $ignoreFiles = $this->config->getIgnoreFiles();
+        $ignoreDirs = $this->config->getOption(ScanConfigurationOption::IGNORE_DIRS->value) ?? [];
+        $ignoreFiles = $this->config->getOption(ScanConfigurationOption::IGNORE_FILES->value) ?? [];
 
         // Skip ignored directories
-        if (is_dir($dir.DIRECTORY_SEPARATOR.$entry)) {
+        if (is_dir($dir . DIRECTORY_SEPARATOR . $entry)) {
             return in_array($entry, $ignoreDirs, true);
         }
 

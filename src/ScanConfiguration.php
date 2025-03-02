@@ -5,24 +5,16 @@ namespace CodeIngestor;
 readonly class ScanConfiguration
 {
     public function __construct(
-        private string $sourcePath,
-        private array $ignoreDirs,
-        private array $ignoreFiles
+        private array $config = []
     ) {
     }
 
-    public function getSourcePath(): string
+    public function getOption(string $option): mixed
     {
-        return $this->sourcePath;
-    }
-
-    public function getIgnoreDirs(): array
-    {
-        return $this->ignoreDirs;
-    }
-
-    public function getIgnoreFiles(): array
-    {
-        return $this->ignoreFiles;
+        if (isset($this->config[$option])) {
+            return $this->config[$option];
+        } else {
+            return null;
+        }
     }
 }
