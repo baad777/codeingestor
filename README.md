@@ -34,7 +34,7 @@ ignoreDirs:                                 # Directories to skip
 ignoreFiles:                                # Files to skip
   - .env
   - .gitignore
-  - ""*.lock"
+  - "*.lock"
 ```
 
 - `source`: The directory path of your PHP project.
