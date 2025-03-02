@@ -59,7 +59,7 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-CodeIngestor is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+CodeIngestor is licensed under the MIT License.
 
 ## Contact
 
