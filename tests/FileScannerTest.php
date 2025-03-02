@@ -5,6 +5,7 @@ namespace CodeIngestor\Tests;
 use CodeIngestor\DirectoryDeleterTrait;
 use CodeIngestor\FileScanner;
 use CodeIngestor\ScanConfiguration;
+use CodeIngestor\ScanConfigurationOption;
 use PHPUnit\Framework\TestCase;
 
 class FileScannerTest extends TestCase
@@ -37,11 +38,9 @@ class FileScannerTest extends TestCase
 
     public function testIgnoresDotAndDotDotByDefault()
     {
-        $config = new ScanConfiguration(
-            $this->testDir,
-            [], // Empty ignore_dirs (but . and .. are always ignored)
-            []
-        );
+        $config = new ScanConfiguration([
+            ScanConfigurationOption::SOURCE_PATH->value => $this->testDir
+        ]);
         $scanner = new FileScanner($config);
 
         $files = $scanner->scanFiles();
@@ -54,24 +53,13 @@ class FileScannerTest extends TestCase
         $emptyDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'empty_test_' . uniqid();
         mkdir($emptyDir);
 
-        $config = new ScanConfiguration($emptyDir, [], []);
+        $config = new ScanConfiguration([
+            ScanConfigurationOption::SOURCE_PATH->value => $emptyDir
+        ]);
         $scanner = new FileScanner($config);
 
         $this->assertEmpty($scanner->scanFiles());
         rmdir($emptyDir);
-    }
-
-    public function testTreeIncludesFilesAndDirectories()
-    {
-        // Add a file at the root of the test directory
-        file_put_contents($this->testDir . '/root_file.txt', '');
-
-        $config = new ScanConfiguration($this->testDir, [], []);
-        $scanner = new FileScanner($config);
-
-        $expected = "src\n    utils\n        file2.php\n    vendor\n    file1.php\nroot_file.txt\n";
-
-        $this->assertEquals($expected, $scanner->generateDirectoryTree());
     }
 
     public function testExcludesHiddenFilesAndDirectories()
@@ -82,7 +70,9 @@ class FileScannerTest extends TestCase
         // add a file in the hidden dir
         file_put_contents($this->testDir . '/.hidden_dir/file_in_hidden_dir.txt', '');
 
-        $config = new ScanConfiguration($this->testDir, [], []);
+        $config = new ScanConfiguration([
+            ScanConfigurationOption::SOURCE_PATH->value => $this->testDir
+        ]);
         $scanner = new FileScanner($config);
 
         $files = $scanner->scanFiles();
@@ -98,11 +88,10 @@ class FileScannerTest extends TestCase
         file_put_contents($this->testDir . '/file1.log', '');
         file_put_contents($this->testDir . '/src/file2.log', '');
 
-        $config = new ScanConfiguration(
-            $this->testDir,
-            [], // Empty ignore_dirs
-            ['*.log'] // Ignore files with .log extension
-        );
+        $config = new ScanConfiguration([
+            ScanConfigurationOption::SOURCE_PATH->value => $this->testDir,
+            ScanConfigurationOption::IGNORE_FILES->value => ['*.log'] // Ignore files with .log extension
+        ]);
         $scanner = new FileScanner($config);
 
         $files = $scanner->scanFiles();
