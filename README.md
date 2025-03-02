@@ -24,12 +24,17 @@ composer require codeingestor/codeingestor
 Create a configuration file named `codeingestor.yaml` in the root of your project with the following structure(example):
 
 ```yaml
-source: "./"
-output: "llm_output.txt"
-ignore_dirs:
-  - "vendor"
-ignore_files:
-  - "*.log"
+# Default configuration
+sourcePath: "./"                            # Folder to scan
+outputFile: "codeingestor_output.txt"       # Output file
+ignoreDirs:                                 # Directories to skip
+  - vendor
+  - node_modules
+  - .git
+ignoreFiles:                                # Files to skip
+  - .env
+  - .gitignore
+  - *.lock
 ```
 
 - `source`: The directory path of your PHP project.
@@ -41,19 +46,10 @@ ignore_files:
 CodeIngestor comes with a command line interface (CLI) tool. You can run it using the following command:
 
 ```sh
-./bin/codeingestor
+./vendor/bin/codeingestor
 ```
 
 This command will execute the parser and generate the structured text output based on your configuration.
-
-## Directory Structure
-
-- **src/**: Contains the source code of the library.
-    - **FileScanner.php**: Implements the `generateDirectoryTree` method to build a directory tree structure.
-    - **FileScannerInterface.php**: Defines the interface for file scanning operations.
-    - **ScanConfiguration.php**: Holds configuration settings for the scan process.
-- **bin/**: Contains the executable script for running CodeIngestor via CLI.
-- **composer.json**: Composer configuration file for managing dependencies and autoloads.
 
 ## Contributing
 
