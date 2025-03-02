@@ -1,11 +1,11 @@
 # Default configuration
-source: "./"                            # Folder to scan
-output: "codeingestor_output.txt"       # Output file
-ignore_dirs:                            # Directories to skip
+sourcePath: "./"                            # Folder to scan
+outputFile: "codeingestor_output.txt"       # Output file
+ignoreDirs:                                 # Directories to skip
   - vendor
   - node_modules
   - .git
-ignore_files:                           # Files to skip
+ignoreFiles:                                # Files to skip
   - .env
   - .gitignore
   - *.lock

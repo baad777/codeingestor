@@ -2,15 +2,14 @@
 namespace CodeIngestor;
 
 use Symfony\Component\Yaml\Yaml;
-use RuntimeException;
 
 class ConfigHandler {
     public function loadConfig(string $configPath): array {
         $defaults = [
-            'source' => getcwd(),
-            'output' => 'codeingestor_output.txt',
-            'ignore_dirs' => ['vendor', 'node_modules', '.git'],
-            'ignore_files' => ['.env', '.gitignore', '*.lock']
+            ScanConfigurationOption::SOURCE_PATH->value => getcwd(),
+            ScanConfigurationOption::OUTPUT->value => 'codeingestor_output.txt',
+            ScanConfigurationOption::IGNORE_DIRS->value => ['vendor', 'node_modules', '.git'],
+            ScanConfigurationOption::IGNORE_FILES->value => ['.env', '.gitignore', '*.lock']
         ];
 
         $userConfig = [];

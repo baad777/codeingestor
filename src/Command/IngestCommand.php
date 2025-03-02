@@ -7,6 +7,7 @@ use CodeIngestor\ContentExtractor;
 use CodeIngestor\Exception\ValidationException;
 use CodeIngestor\FileScanner;
 use CodeIngestor\ScanConfiguration;
+use CodeIngestor\ScanConfigurationOption;
 use CodeIngestor\Validation\SourceValidator;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -37,14 +38,10 @@ class IngestCommand extends Command
             // Load config and validate
             $configPath = $input->getOption('config') ?? "codeingestor.yaml";
             $configArray = (new ConfigHandler())->loadConfig($configPath);
-            $resolvedSource = (new SourceValidator())->validate($configArray['source']);
+            $configArray[ScanConfigurationOption::SOURCE_PATH->value] = (new SourceValidator())->validate($configArray[ScanConfigurationOption::SOURCE_PATH->value]);
 
             // Create scan configuration
-            $scanConfig = new ScanConfiguration(
-                $resolvedSource,
-                $configArray['ignore_dirs'],
-                $configArray['ignore_files']
-            );
+            $scanConfig = new ScanConfiguration($configArray);
 
             // Scan files
             $fileScanner = new FileScanner($scanConfig);
@@ -58,7 +55,7 @@ class IngestCommand extends Command
 
             $extractor = new ContentExtractor();
             foreach ($files as $file) {
-                $absolutePath = $scanConfig->getSourcePath() . DIRECTORY_SEPARATOR . $file;
+                $absolutePath = $scanConfig->getOption(ScanConfigurationOption::SOURCE_PATH->value) . DIRECTORY_SEPARATOR . $file;
                 $outputContent .= "\n================================================\n";
                 $outputContent .= "File: {$file}\n";
                 $outputContent .= "================================================\n";
@@ -66,7 +63,7 @@ class IngestCommand extends Command
             }
 
             // Write to output file
-            $outputPath = $configArray['output'];
+            $outputPath = $scanConfig->getOption(ScanConfigurationOption::OUTPUT->value);
             if (!is_dir(dirname($outputPath))) {
                 mkdir(dirname($outputPath), 0755, true);
             }
