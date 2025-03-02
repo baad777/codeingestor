@@ -8,9 +8,9 @@ class ConfigHandler {
     public function loadConfig(string $configPath): array {
         $defaults = [
             'source' => getcwd(),
-            'output' => 'output.txt',
+            'output' => 'codeingestor_output.txt',
             'ignore_dirs' => ['vendor', 'node_modules', '.git'],
-            'ignore_files' => ['.env', '.gitignore']
+            'ignore_files' => ['.env', '.gitignore', '*.lock']
         ];
 
         $userConfig = [];
