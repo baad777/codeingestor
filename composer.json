@@ -1,5 +1,5 @@
 {
-  "name": "codeingestor/codeingestor",
+  "name": "baad777/codeingestor",
   "type": "library",
   "description": "Parse PHP projects into structured text files for LLM ingestion.",
   "license": "MIT",
