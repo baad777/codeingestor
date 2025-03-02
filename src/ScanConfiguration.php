@@ -2,11 +2,19 @@
 
 namespace CodeIngestor;
 
-readonly class ScanConfiguration
+class ScanConfiguration
 {
     public function __construct(
         private array $config = []
-    ) {
+    )
+    {
+        if (!array_key_exists($key = ScanConfigurationOption::SOURCE_PATH->value, $this->config)) {
+            $this->config[$key] = getcwd();
+        }
+
+        if (!array_key_exists($key = ScanConfigurationOption::OUTPUT->value, $this->config)) {
+            $this->config[$key] = "codeingestor_output.txt";
+        }
     }
 
     public function getOption(string $option): mixed

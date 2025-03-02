@@ -8,4 +8,4 @@ ignoreDirs:                                 # Directories to skip
 ignoreFiles:                                # Files to skip
   - .env
   - .gitignore
-  - *.lock
+  - "*.lock"

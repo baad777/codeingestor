@@ -34,7 +34,7 @@ ignoreDirs:                                 # Directories to skip
 ignoreFiles:                                # Files to skip
   - .env
   - .gitignore
-  - *.lock
+  - ""*.lock"
 ```
 
 - `source`: The directory path of your PHP project.
@@ -46,7 +46,7 @@ ignoreFiles:                                # Files to skip
 CodeIngestor comes with a command line interface (CLI) tool. You can run it using the following command:
 
 ```sh
-./vendor/bin/codeingestor
+./vendor/bin/codeingestor /path/to/folder
 ```
 
 This command will execute the parser and generate the structured text output based on your configuration.

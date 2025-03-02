@@ -105,6 +105,8 @@ readonly class FileScanner implements FileScannerInterface
 
     private function shouldIgnore(string $entry, string $dir): bool
     {
+        $entryPath = realpath($dir . DIRECTORY_SEPARATOR . $entry);
+
         // Always ignore '.' and '..' to prevent infinite loops
         if ($entry === '.' || $entry === '..') {
             return true;
@@ -124,7 +126,7 @@ readonly class FileScanner implements FileScannerInterface
         $ignoreFiles = $this->config->getOption(ScanConfigurationOption::IGNORE_FILES->value) ?? [];
 
         // Skip ignored directories
-        if (is_dir($dir . DIRECTORY_SEPARATOR . $entry)) {
+        if (is_dir($entryPath)) {
             return in_array($entry, $ignoreDirs, true);
         }
 
@@ -136,8 +138,9 @@ readonly class FileScanner implements FileScannerInterface
         }
 
         // Skip output file from configuration
-        $outputFile = $this->config->getOption(ScanConfigurationOption::OUTPUT->value);
-        if ($outputFile === $dir . DIRECTORY_SEPARATOR . $entry) {
+        $outputFile = realpath($this->config->getOption(ScanConfigurationOption::OUTPUT->value));
+
+        if ($outputFile === $entryPath) {
             return true;
         }
 

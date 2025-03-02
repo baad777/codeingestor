@@ -2,6 +2,8 @@
 
 namespace CodeIngestor\Tests;
 
+use CodeIngestor\ScanConfiguration;
+use CodeIngestor\ScanConfigurationOption;
 use PHPUnit\Framework\TestCase;
 
 class ScanConfigurationTest extends TestCase
@@ -22,5 +24,17 @@ class ScanConfigurationTest extends TestCase
         $this->assertEquals($ignoreFiles, $scanConfig->getOption('ignoreFiles'));
         // non existent option should return null
         $this->assertNull($scanConfig->getOption('nonExistentOption'));
+    }
+
+    public function testScanConfigurationSourcePathAndOutputMustNeverBeNull()
+    {
+        $scanConfig = new ScanConfiguration([]);
+
+        $this->assertNotNull($sourcePath = $scanConfig->getOption(ScanConfigurationOption::SOURCE_PATH->value));
+        $this->assertEquals(getcwd(), $sourcePath);
+
+        $this->assertNotNull($outputFile = $scanConfig->getOption(ScanConfigurationOption::OUTPUT->value));
+        $this->assertEquals("codeingestor_output.txt", $outputFile);
+
     }
 }

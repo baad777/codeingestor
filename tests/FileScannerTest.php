@@ -105,12 +105,14 @@ class FileScannerTest extends TestCase
     {
         // Add a output file to the test directory
         file_put_contents($this->testDir . '/outputFILE.txt', 'OUTPUT_TEXT_GOES_HERE');
+
         $config = new ScanConfiguration([
             ScanConfigurationOption::SOURCE_PATH->value => $this->testDir,
             ScanConfigurationOption::OUTPUT->value => $this->testDir . '/outputFILE.txt' // Ignore files with .log extension
         ]);
         $scanner = new FileScanner($config);
         $files = $scanner->scanFiles();
+
         $this->assertNotContains('outputFILE.txt', $files);
     }
 }
