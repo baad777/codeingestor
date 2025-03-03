@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class IngestCommand extends Command
 {
-    protected static $defaultName = 'ingest';
+    protected static $defaultName = 'codeingestor';
 
     protected function configure(): void
     {

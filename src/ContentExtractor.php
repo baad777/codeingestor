@@ -6,6 +6,13 @@ use RuntimeException;
 
 class ContentExtractor
 {
+    protected FileTypeDetector $fileTypeDetector;
+
+    public function __construct()
+    {
+        $this->fileTypeDetector = new FileTypeDetector();
+    }
+
     public function extract(string $filePath): string
     {
         if (!file_exists($filePath)) {
@@ -14,6 +21,11 @@ class ContentExtractor
 
         if (!is_readable($filePath)) {
             throw new RuntimeException("File is not readable: {$filePath}");
+        }
+
+        // if file is not text, then return string
+        if($this->fileTypeDetector->isBinary($filePath)) {
+            return "***Binary file contents will not be extracted***";
         }
 
         $content = file_get_contents($filePath);

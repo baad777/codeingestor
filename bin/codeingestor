@@ -15,7 +15,15 @@ require $root_app . '/vendor/autoload.php';
 use CodeIngestor\Command\IngestCommand;
 use Symfony\Component\Console\Application;
 
-$app = new Application('CodeIngestor', '0.0.3');
+$version = '0.0.1'; // default value if composer.json is not found or does not contain a version field
+// read composer.json, get version from there
+$composer_json_path = $root_app . '/composer.json';
+if (is_file($composer_json_path)) {
+    $json = json_decode(file_get_contents($composer_json_path), true);
+    $version = $json['version'] ?? $version;
+}
+
+$app = new Application('CodeIngestor', $version);
 $app->add($command = new IngestCommand());
 $app->setDefaultCommand($command->getName(), true);
 $app->run();

@@ -3,7 +3,7 @@
   "type": "library",
   "description": "Parse PHP projects into structured text files for LLM ingestion.",
   "license": "MIT",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "authors": [
     {
       "name": "Bancu Adrian",
@@ -17,7 +17,9 @@
   },
   "require-dev": {
     "symfony/var-dumper": "^7.2",
-    "phpunit/phpunit": "^10.0"
+    "phpunit/phpunit": "^10.0",
+    "fakerphp/faker": "^1.24",
+    "ext-gd": "*"
   },
   "autoload": {
     "psr-4": {
