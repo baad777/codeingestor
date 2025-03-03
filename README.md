@@ -14,7 +14,13 @@ CodeIngestor is a library designed to parse PHP projects into structured text fi
 You can install CodeIngestor via Composer:
 
 ```sh
-composer require codeingestor/codeingestor
+composer require codeingestor/codeingestor --dev
+```
+
+Or you can install it globally
+
+```sh
+composer global require codeingestor/codeingestor
 ```
 
 ## Usage
