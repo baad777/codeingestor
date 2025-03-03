@@ -17,7 +17,7 @@ use Symfony\Component\Console\Application;
 
 $version = '0.0.1'; // default value if composer.json is not found or does not contain a version field
 // read composer.json, get version from there
-$composer_json_path = $root_app . '/composer.json';
+$composer_json_path = __DIR__ . '/../composer.json';
 if (is_file($composer_json_path)) {
     $json = json_decode(file_get_contents($composer_json_path), true);
     $version = $json['version'] ?? $version;
