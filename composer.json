@@ -3,7 +3,7 @@
   "type": "library",
   "description": "Parse PHP projects into structured text files for LLM ingestion.",
   "license": "MIT",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "authors": [
     {
       "name": "Bancu Adrian",
