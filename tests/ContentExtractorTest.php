@@ -47,7 +47,7 @@ class ContentExtractorTest extends TestCase
         $extractor = new ContentExtractor();
         $result = $extractor->extract($tmpFilePath);
 
-        $this->assertEquals("***Binary file contents will not be extracted***", $result);
+        $this->assertEquals("*** This is a binary file. Content cannot be displayed. ***", $result);
         unlink($tmpFilePath); // Clean up the temporary file after testing
     }
 }

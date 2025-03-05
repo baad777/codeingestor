@@ -25,7 +25,7 @@ class ContentExtractor
 
         // if file is not text, then return string
         if($this->fileTypeDetector->isBinary($filePath)) {
-            return "***Binary file contents will not be extracted***";
+            return "*** This is a binary file. Content cannot be displayed. ***";
         }
 
         $content = file_get_contents($filePath);
