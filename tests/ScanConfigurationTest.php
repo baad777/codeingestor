@@ -15,13 +15,17 @@ class ScanConfigurationTest extends TestCase
             'sourcePath' => $sourcePath = '/some/path',
             'output' => $outputFile = 'some_output_file.txt',
             'ignoreDirs' => $ignoreDirs = ['dir1', 'dir2'],
-            'ignoreFiles' => $ignoreFiles =  ['file1.txt', 'file2.txt']
+            'ignoreFiles' => $ignoreFiles =  ['file1.txt', 'file2.txt'],
+            'onlyDirs' => $onlyDirs = ['app', 'src'],
+            'onlyFiles' => $onlyFiles = ['composer.json', 'phpunit.xml'],
         ]);
 
         $this->assertEquals($sourcePath, $scanConfig->getOption('sourcePath'));
         $this->assertEquals($outputFile, $scanConfig->getOption('output'));
         $this->assertEquals($ignoreDirs, $scanConfig->getOption('ignoreDirs'));
         $this->assertEquals($ignoreFiles, $scanConfig->getOption('ignoreFiles'));
+        $this->assertEquals($onlyDirs, $scanConfig->getOption('onlyDirs'));
+        $this->assertEquals($onlyFiles, $scanConfig->getOption('onlyFiles'));
         // non existent option should return null
         $this->assertNull($scanConfig->getOption('nonExistentOption'));
     }

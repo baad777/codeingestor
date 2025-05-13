@@ -1,11 +1,23 @@
 # Default configuration
 sourcePath: "./"                            # Folder to scan
 outputFile: "codeingestor_output.txt"       # Output file
-ignoreDirs:                                 # Directories to skip
+onlyDirs:                                   # Directories to include (relative to sourcePath)
+  - src
+  - app
+  - test
+  - tests
+  - spec
+  - example
+  - examples
+  - demo
+onlyFiles:                                  # Files to include (relative to sourcePath)
+  - composer.json
+  - phpunit.xml
+ignoreDirs:                                 # Directories names to skip
   - vendor
   - node_modules
   - .git
-ignoreFiles:                                # Files to skip
+ignoreFiles:                                # Files names(patterns) to skip
   - .env
   - .gitignore
   - "*.lock"

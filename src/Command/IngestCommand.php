@@ -57,7 +57,7 @@ class IngestCommand extends Command
 
         $sourcePath = $input->getArgument('sourcePath') ?? null;
         if ($sourcePath != null) {
-            // check if folder exists
+            // check if the folder exists
             if (!is_dir($sourcePath)) {
                 throw new RuntimeException("Source path does not exist");
             }

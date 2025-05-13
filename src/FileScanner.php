@@ -29,7 +29,8 @@ readonly class FileScanner implements FileScannerInterface
             ->buildTree(
                 $this
                     ->config
-                    ->getOption(ScanConfigurationOption::SOURCE_PATH->value));
+                    ->getOption(ScanConfigurationOption::SOURCE_PATH->value)
+            );
     }
 
     private function scanDirectory(string $dir, array &$files, string $relativePath = ''): void
@@ -44,7 +45,7 @@ readonly class FileScanner implements FileScannerInterface
                 continue;
             }
 
-            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+            $path            = $dir . DIRECTORY_SEPARATOR . $entry;
             $newRelativePath = $relativePath !== '' ? $relativePath . DIRECTORY_SEPARATOR . $entry : $entry;
 
             if (is_dir($path)) {
@@ -57,14 +58,14 @@ readonly class FileScanner implements FileScannerInterface
 
     private function buildTree(string $dir, string $prefix = ''): string
     {
-        $tree = '';
+        $tree    = '';
         $entries = scandir($dir);
         if ($entries === false) {
             return $tree;
         }
 
         // Separate directories and files, ignoring "." and ".."
-        $dirs = [];
+        $dirs  = [];
         $files = [];
         foreach ($entries as $entry) {
             if ($entry === '.' || $entry === '..') {
@@ -122,12 +123,14 @@ readonly class FileScanner implements FileScannerInterface
             return true;
         }
 
-        $ignoreDirs = $this->config->getOption(ScanConfigurationOption::IGNORE_DIRS->value) ?? [];
+        $ignoreDirs  = $this->config->getOption(ScanConfigurationOption::IGNORE_DIRS->value) ?? [];
         $ignoreFiles = $this->config->getOption(ScanConfigurationOption::IGNORE_FILES->value) ?? [];
 
         // Skip ignored directories
-        if (is_dir($entryPath)) {
-            return in_array($entry, $ignoreDirs, true);
+        foreach ($ignoreDirs as $dir) {
+            if (str_starts_with($entry, $dir)) {
+                return true;
+            }
         }
 
         // Skip ignored files
@@ -142,6 +145,34 @@ readonly class FileScanner implements FileScannerInterface
 
         if ($outputFile === $entryPath) {
             return true;
+        }
+
+        // if isset config onlyDirs, and is dir, and it is in that array, return false
+        $onlyDirs   = $this->config->getOption(ScanConfigurationOption::ONLY_DIRS->value) ?? [];
+        $onlyFiles  = $this->config->getOption(ScanConfigurationOption::ONLY_FILES->value) ?? [];
+        $sourcePath = $this->config->getOption(ScanConfigurationOption::SOURCE_PATH->value);
+
+        if (count($onlyFiles) && !is_dir($entryPath)) {
+            // if $entryPath is in sourcePath folder
+            $realEntryPath  = realpath($entryPath);
+            $realSourcePath = realpath($sourcePath);
+            $realEntryPath  = str_replace($realSourcePath, '', $realEntryPath);
+            // if $realEntryPath is directly under / without any subfolder
+            if (count($exp = explode(DIRECTORY_SEPARATOR, $realEntryPath)) == 2) {
+                return !in_array($exp[1], $onlyFiles);
+            }
+        }
+
+        if (count($onlyDirs)) {
+            // get path of $entryPath relative to $sourcePath (use realpath)
+            $realEntryPath  = realpath($entryPath);
+            $realSourcePath = realpath($sourcePath);
+            $realEntryPath  = str_replace($realSourcePath, '', $realEntryPath);
+            // if the base folder of $entryPath does not exist in $onlyDirs return true
+            $baseDir = explode(DIRECTORY_SEPARATOR, $realEntryPath)[1] ?? '';
+            if (!in_array($baseDir, $onlyDirs)) {
+                return true;
+            }
         }
 
         return false;
