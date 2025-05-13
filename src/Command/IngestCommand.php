@@ -30,6 +30,13 @@ class IngestCommand extends Command
                 'Path to config file',
                 'codeingestor.yaml'
             )
+            // option to init a default yaml config file
+            ->addOption(
+                'init',
+                'i',
+                InputOption::VALUE_NONE,
+                'Initialize a default config file'
+            )
             ->addArgument(
                 "sourcePath",
                 InputArgument::OPTIONAL,
@@ -39,6 +46,15 @@ class IngestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // Load config and validate
+        $configPath    = $input->getOption('config') ?? "codeingestor.yaml";
+        $configHandler = new ConfigHandler();
+        $configArray   = $configHandler->loadConfig($configPath);
+
+        if ($commandResult = $this->handleInit($input, $output, $configPath)) {
+            return $commandResult;
+        }
+
         $sourcePath = $input->getArgument('sourcePath') ?? null;
         if ($sourcePath != null) {
             // check if folder exists
@@ -47,12 +63,10 @@ class IngestCommand extends Command
             }
         }
 
-        // Load config and validate
-        $configPath = $input->getOption('config') ?? "codeingestor.yaml";
-
         try {
-            $configArray = (new ConfigHandler())->loadConfig($configPath);
-            $sourcePath = is_null($sourcePath) ? $configArray[ScanConfigurationOption::SOURCE_PATH->value] : $sourcePath;
+            $sourcePath                                               = is_null(
+                $sourcePath
+            ) ? $configArray[ScanConfigurationOption::SOURCE_PATH->value] : $sourcePath;
             $configArray[ScanConfigurationOption::SOURCE_PATH->value] = (new SourceValidator())->validate($sourcePath);
 
             $fileContentWriter = new FileContentWriter(new ScanConfiguration($configArray));
@@ -68,5 +82,33 @@ class IngestCommand extends Command
             $output->writeln("<error>Error: {$e->getMessage()}</error>");
             return Command::FAILURE;
         }
+    }
+
+    private function handleInit(
+        InputInterface $input,
+        OutputInterface $output,
+        string $configPath
+    ) {
+        // if init option then init config file
+        if ($input->getOption('init')) {
+            if (file_exists($configPath)) {
+                throw new RuntimeException("Config file already exists");
+            }
+            // copy codeingestor.yaml.dist to current path
+            $sourcePath = realpath(
+                __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "codeingestor.yaml.dist"
+            );
+            $destPath   = realpath(getcwd()) . DIRECTORY_SEPARATOR . "codeingestor.yaml";
+
+            if ($sourcePath === false || $destPath === false || !copy($sourcePath, $destPath)) {
+                throw new RuntimeException("Failed to create config file");
+            }
+
+            $output->writeln("<info>Default config file created at: {$configPath}</info>");
+
+            return Command::SUCCESS;
+        }
+
+        return null;
     }
 }

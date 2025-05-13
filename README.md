@@ -27,6 +27,13 @@ composer global require baad777/codeingestor
 
 ### Configuration
 
+Optional: init a default configuration file with the command:
+```bash
+./vendor/bin/codeingestor --init
+```
+
+OR:
+
 Create a configuration file named `codeingestor.yaml` in the root of your project with the following structure(example):
 
 ```yaml
